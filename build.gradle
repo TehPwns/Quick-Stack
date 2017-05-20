@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
 apply plugin: 'idea'
 
-def mcVersion = "1.8.8"
+def mcVersion = "1.10.2"
 def modVersion = "0.1.0"
 
 version = mcVersion + '-' + modVersion
@@ -23,9 +23,9 @@ group = "vorquel.mod.quickstack"
 archivesBaseName = "QuickStack"
 
 minecraft {
-    version = "1.8.8-11.14.4.1576-1.8.8"
+    version = "12.18.1.2024"
     runDir = "run"
-    mappings = "snapshot_20151122"
+    mappings = "snapshot_20160701"
     makeObfSourceJar = false
 }
 

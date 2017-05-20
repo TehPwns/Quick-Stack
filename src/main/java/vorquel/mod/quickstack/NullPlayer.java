@@ -16,4 +16,9 @@ public class NullPlayer extends EntityPlayer {
     public boolean isSpectator() {
         return true;
     }
+
+    @Override
+    public boolean isCreative() {
+        return false;
+    }
 }

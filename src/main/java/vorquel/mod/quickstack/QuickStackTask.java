@@ -9,7 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 
@@ -72,11 +72,7 @@ class QuickStackTask implements Runnable {
             if(slot.inventory instanceof InventoryPlayer)
                 continue;
             ItemStack currentStack = slot.getStack();
-            if(currentStack == null && slot.isItemValid(stack)) {
-                stack = placeStack(slot, stack, 0);
-                if(stack == null)
-                    return null;
-            } else if(equal(stack, currentStack) && slot.getSlotStackLimit() != currentStack.stackSize) {
+            if(equal(stack, currentStack) && slot.getSlotStackLimit() != currentStack.stackSize) {
                 stack = placeStack(slot, stack, currentStack.stackSize);
                 if(stack == null)
                     return null;
@@ -94,10 +90,15 @@ class QuickStackTask implements Runnable {
     }
     
     private ItemStack placeStack(Slot slot, ItemStack stack, int offset) {
+        // The amount moved from player inventory to container slot is the entire stack
+        // if we do not hit max, otherwise the number remaining until max.
         int max = Math.min(slot.getItemStackLimit(stack), stack.getMaxStackSize());
-        int newSize = Math.min(max, offset + stack.stackSize);
-        slot.putStack(stack.splitStack(newSize));
-        stack.stackSize += offset;
+        int amountMoved = Math.min(max - slot.getStack().stackSize, stack.stackSize);
+
+        // Move blocks
+        slot.getStack().stackSize += amountMoved;
+        stack.stackSize -= amountMoved;
+
         if(stack.stackSize > 0)
             return stack;
         else
