@@ -68,16 +68,37 @@ class QuickStackTask implements Runnable {
     }
     
     private ItemStack findPlacement(Container container, ItemStack stack) {
+        boolean allEqualSlotsFull = true;
         for(Slot slot : container.inventorySlots) {
             if(slot.inventory instanceof InventoryPlayer)
                 continue;
             ItemStack currentStack = slot.getStack();
             if(equal(stack, currentStack) && slot.getSlotStackLimit() != currentStack.stackSize) {
+                allEqualSlotsFull = false;
                 stack = placeStack(slot, stack, currentStack.stackSize);
                 if(stack == null)
                     return null;
             }
         }
+
+        // If we had equal slots, but all were full, place this stack in a new position
+        // if there is a free spot in the chest.
+        if(allEqualSlotsFull) {
+            Slot firstEmptySlot = null;
+            for(Slot slot : container.inventorySlots) {
+                if(slot.inventory instanceof InventoryPlayer)
+                    continue;
+                if(slot.getHasStack() == false) {
+                    firstEmptySlot = slot;
+                    break;
+                }
+            }
+            if(firstEmptySlot != null) {
+                firstEmptySlot.putStack(new ItemStack(stack.getItem(), 0));
+                stack = placeStack(firstEmptySlot, stack, 0);
+            }
+        }
+
         return stack;
     }
     
