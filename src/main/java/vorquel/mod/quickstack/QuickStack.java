@@ -24,6 +24,7 @@ public class QuickStack {
         proxy.preInit();
         network = NetworkRegistry.INSTANCE.newSimpleChannel("QuickStack");
         network.registerMessage(MessageQuickStack.Handler.class, MessageQuickStack.class, 0, Side.SERVER);
+        network.registerMessage(MessageQuickStackSound.Handler.class, MessageQuickStackSound.class, 1, Side.CLIENT);
     }
     
     @Mod.EventHandler

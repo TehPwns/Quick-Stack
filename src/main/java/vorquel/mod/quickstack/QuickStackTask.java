@@ -12,13 +12,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-
 import java.util.List;
 
 class QuickStackTask implements Runnable {
     
     private EntityPlayerMP player;
     private NullPlayer nullPlayer;
+    private boolean movedAnyBlocks = false;
     
     public QuickStackTask(EntityPlayerMP player) {
         this.player = player;
@@ -31,6 +31,11 @@ class QuickStackTask implements Runnable {
         for(IInteractionObject interactionObject : nearbyInteractiveObjects(world, player.getPosition()))
             quickStack(player.inventory.mainInventory, interactionObject);
         player.inventory.markDirty();
+
+        // Play sound on client to cue that blocks were moved
+        if(movedAnyBlocks) {
+            QuickStack.network.sendTo(MessageQuickStackSound.instance, player);
+        }
     }
     
     private List<IInteractionObject> nearbyInteractiveObjects(World world, BlockPos pos) {
@@ -119,6 +124,10 @@ class QuickStackTask implements Runnable {
         // Move blocks
         slot.getStack().stackSize += amountMoved;
         stack.stackSize -= amountMoved;
+
+        if(amountMoved > 0) {
+            movedAnyBlocks = true;
+        }
 
         if(stack.stackSize > 0)
             return stack;

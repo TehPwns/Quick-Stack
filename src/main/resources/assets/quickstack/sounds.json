@@ -1,0 +1,7 @@
+{
+  "quick_stack_notify": {
+    "category": "neutral",
+    "subtitle": "Items Were Quickstacked",
+    "sounds": [ "quickstack:quick_stack_notify" ]
+  }
+}
