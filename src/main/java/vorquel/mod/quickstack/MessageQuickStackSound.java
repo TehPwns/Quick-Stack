@@ -1,7 +1,6 @@
 package vorquel.mod.quickstack;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -12,7 +11,7 @@ import net.minecraft.util.SoundEvent;
 public class MessageQuickStackSound implements IMessage { 
 
     public static final MessageQuickStackSound instance = new MessageQuickStackSound();
-    
+
     public static ResourceLocation location = new ResourceLocation("quickstack", "quick_stack_notify");
     public static SoundEvent quickStackNotifyEvent = new SoundEvent(location);
 
